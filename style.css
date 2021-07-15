@@ -1,0 +1,20 @@
+html{
+    text-align: center;
+}
+.container{
+    display: grid;
+    grid-template-columns: repeat(4, 100px);
+    grid-template-rows: repeat(6, 100px);
+}
+.display{
+    grid-column: span 4;
+}
+.clear{
+    grid-column: span 2;
+}
+.delete{
+    grid-column: span 2;
+}
+.display{
+    border: 1px solid black;
+}
