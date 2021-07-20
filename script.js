@@ -5,6 +5,7 @@ const deleteButton = document.querySelector('.delete');
 const decimalButton = document.querySelector('.decimal');
 const equalButton = document.querySelector('.equal');
 const screen = document.getElementById('display');
+const container = document.querySelector('.container');
 let result = 0;
 let operator = '+';
 let calculatedCheck = false;
@@ -21,15 +22,43 @@ clearButton.addEventListener('click', () => resetScreen());
 deleteButton.addEventListener('click', () => deleteScreen());
 equalButton.addEventListener('click', () => equalButtonDisplay());
 
+document.addEventListener('keydown', function(event){
+    
+    numberKeyDown = parseInt(event.key);
+    if ((numberKeyDown >= 0) && (numberKeyDown<=9)) {
+        displayNumber(numberKeyDown);
+    }
 
+    switch (event.key){
+        case 'Escape': 
+            resetScreen();
+            break;
+        case 'Backspace':
+            deleteScreen();
+            break;
+        case '=':
+        case 'Enter':
+            equalButtonDisplay();
+            break;
+        case '+':
+        case '-':
+        case '*':
+        case '/':
+            operation(event.key);
+            break;
+        case '.':
+            displayNumber(event.key);
+            break;
+    }
+});
 function deleteScreen(){
     screen.textContent = screen.textContent.substring(0, screen.textContent.length-1);
 }
 function resetScreen(){
     operator = '+';
     result = 0;
+    console.log(result, 'trigger reset');
     displayResult(result);
-    console.log(result);
 }
 
 
@@ -44,8 +73,8 @@ function round(number){
 function displayResult(result){
     result = round(result);
     screen.textContent = result;
+    console.log(result, 'trigger display')
 }
-
 function equalButtonDisplay(){
     if (!calculatedCheck) {
         let currentNumber = Number(screen.textContent);
@@ -64,11 +93,33 @@ function operation(operatorSign){
     operator = operatorSign;
 }
 
+//color change function
+let containerButtons = container.querySelectorAll('button');
+containerButtons.forEach(containerButton => containerButton.addEventListener('mouseenter', corlorChange));
+containerButtons.forEach(containerButton => containerButton.addEventListener('mouseleave', resetBackGroundButton));
+function resetBackGroundButton(){
+    this.style.backgroundColor = 'white';
+}
+
+function getRandomColor(){
+    let letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i< 6; i++){
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+function corlorChange(){
+    this.style.backgroundColor = getRandomColor();
+}
+
 //call math functions
 function calculate(a,b, operator){
    switch (operator){
     case '+' :
+       console.log('plus');
        return plus(a,b);
+       
        break;
     case '-':
         return minus(a,b);
@@ -77,7 +128,9 @@ function calculate(a,b, operator){
         return devide(a,b);
         break;
     case 'x':
+    case '*':
         return multiply(a,b);
+        break;
     }
 }
 // math functions
